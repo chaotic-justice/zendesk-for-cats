@@ -1,6 +1,7 @@
 import PawButton from "@/components/PawButton"
 import Header from "@/components/Header"
 import AuthButton from "../components/AuthButton"
+import Link from "next/link"
 
 export default async function Index() {
   return (
@@ -16,6 +17,12 @@ export default async function Index() {
         <Header />
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">Next steps</h2>
+          <Link href="/new-ticket" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+            Submit a ticket
+          </Link>
+          <Link href="/admin-panel" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+            Resolve tickets
+          </Link>
         </main>
       </div>
 
