@@ -1,6 +1,7 @@
 import BackButton from "@/components/BackButton"
 import { createClient } from "@/utils/supabase/server"
 import { SubmitButton } from "../login/submit-button"
+import { redirect } from "next/navigation"
 
 export default function NewTicket() {
   const createTicket = async (formData: FormData) => {
@@ -21,6 +22,7 @@ export default function NewTicket() {
       console.log("error", error)
     }
     console.log("success!")
+    redirect("/admin-panel")
   }
 
   return (
