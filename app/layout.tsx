@@ -6,8 +6,8 @@ const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` 
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Zendesk for Cats",
+  description: "The fastest way to resolve a dispute.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
