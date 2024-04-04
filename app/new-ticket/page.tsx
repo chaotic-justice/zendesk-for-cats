@@ -1,7 +1,7 @@
 import BackButton from "@/components/BackButton"
 import { SubmitButton } from "@/components/SubmitButton"
 import { createClient } from "@/utils/supabase/server"
-import { redirect } from "next/navigation"
+import { Bounce, toast } from "react-toastify"
 
 export default function NewTicket() {
   const createTicket = async (formData: FormData) => {
@@ -19,10 +19,29 @@ export default function NewTicket() {
     })
 
     if (error) {
-      console.log("error", error)
+      toast.error(`Unknown error:, ${error.message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      })
     }
-    console.log("success!")
-    redirect("/admin-panel")
+
+    toast.success("Submitted!", {
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    })
   }
 
   return (
@@ -50,13 +69,13 @@ export default function NewTicket() {
                   <label className="sr-only" htmlFor="name">
                     Name
                   </label>
-                  <input className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Name" type="text" name="name" id="name" required />
+                  <input className="w-full border rounded-lg border-gray-200 p-3 text-sm" placeholder="Name" type="text" name="name" id="name" required />
                 </div>
                 <div>
                   <label className="sr-only" htmlFor="email">
                     Email
                   </label>
-                  <input className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Email address" type="email" name="email" id="email" required />
+                  <input className="w-full border rounded-lg border-gray-200 p-3 text-sm" placeholder="Email address" type="email" name="email" required />
                 </div>
 
                 <div>
@@ -64,11 +83,11 @@ export default function NewTicket() {
                     Description
                   </label>
 
-                  <textarea className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Description" rows={8} name="description" id="description" required></textarea>
+                  <textarea className="w-full border rounded-lg border-gray-200 p-3 text-sm" placeholder="Description" rows={8} name="description" id="description" required></textarea>
                 </div>
 
-                <div className="mt-4">
-                  <SubmitButton formAction={createTicket} className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto" pendingText="Submitting..">
+                <div className="flex mt-4 justify-center">
+                  <SubmitButton formAction={createTicket} className="rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto" pendingText="Submitting..">
                     Submit
                   </SubmitButton>
                 </div>
