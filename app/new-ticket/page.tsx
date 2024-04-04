@@ -1,6 +1,6 @@
 import BackButton from "@/components/BackButton"
+import { SubmitButton } from "@/components/SubmitButton"
 import { createClient } from "@/utils/supabase/server"
-import { SubmitButton } from "../login/submit-button"
 import { redirect } from "next/navigation"
 
 export default function NewTicket() {
