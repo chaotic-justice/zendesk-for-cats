@@ -31,7 +31,6 @@ function TableComponent({ tickets }: Props) {
         id: "name",
         cell: (info) => info.getValue(),
         header: () => <span>Name</span>,
-        enableColumnFilter: false,
         footer: (props) => props.column.id,
       },
       {
@@ -141,7 +140,11 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
                         <div>
                           <Filter column={header.column} table={table} idx={idx} />
                         </div>
-                      ) : null}
+                      ) : (
+                        <div>
+                          <input type="text" className="w-36 border shadow rounded opacity-0" />
+                        </div>
+                      )}
                     </div>
                   </th>
                 )
@@ -224,10 +227,9 @@ function Filter({ column, table, idx }: { column: Column<any, any>; table: Table
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
-  const truthy = column.getCanFilter()
 
   // enable searching for ticket.status only
-  return !truthy ? <input type="text" className="w-36 border shadow rounded opacity-0" /> : <input type="text" value={(columnFilterValue ?? "") as string} onChange={(e) => column.setFilterValue(e.target.value)} placeholder={`Search...`} className="w-36 border shadow rounded" />
+  return <input type="text" value={(columnFilterValue ?? "") as string} onChange={(e) => column.setFilterValue(e.target.value)} placeholder={`Search...`} className="w-36 border shadow rounded" />
 }
 
 export default TableComponent
