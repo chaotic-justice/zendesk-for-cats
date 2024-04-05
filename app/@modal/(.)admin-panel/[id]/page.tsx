@@ -41,6 +41,8 @@ const Page = async ({ params }: Props) => {
 
     const toastedMessage = `${newStatus === "resolved" ? "Resolved! " : "Updated!"} ${message}`
     if (pgStatus === 201 || pgStatus === 200) {
+      router.back()
+      router.refresh()
       toast.success(toastedMessage, {
         autoClose: 5000,
         hideProgressBar: false,
@@ -51,8 +53,6 @@ const Page = async ({ params }: Props) => {
         theme: "light",
         transition: Bounce,
       })
-      router.back()
-      router.refresh()
     }
   }
 

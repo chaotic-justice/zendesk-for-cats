@@ -1,4 +1,4 @@
-import BackButton from "@/components/BackButton"
+import BackButton from "@/components/buttons/BackButton"
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
 

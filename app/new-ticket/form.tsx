@@ -1,6 +1,6 @@
 "use client"
 
-import { SubmitButton } from "@/components/SubmitButton"
+import { SubmitButton } from "@/components/buttons/SubmitButton"
 import { createTicket } from "@/utils/actions"
 import { Bounce, toast } from "react-toastify"
 

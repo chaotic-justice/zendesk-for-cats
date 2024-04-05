@@ -1,4 +1,4 @@
-import BackButton from "@/components/BackButton"
+import BackButton from "@/components/buttons/BackButton"
 import Form from "./form"
 
 export default function NewTicket() {

@@ -1,4 +1,4 @@
-import PawButton from "@/components/PawButton"
+import PawButton from "@/components/buttons/PawButton"
 import Header from "@/components/Header"
 import Link from "next/link"
 
