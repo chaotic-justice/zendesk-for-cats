@@ -1,30 +1,7 @@
-import BackButton from "@/components/BackButton"
-import { createClient } from "@/utils/supabase/server"
-import { SubmitButton } from "../login/submit-button"
-import { redirect } from "next/navigation"
+import BackButton from "@/components/buttons/BackButton"
+import Form from "./form"
 
 export default function NewTicket() {
-  const createTicket = async (formData: FormData) => {
-    "use server"
-
-    const name = formData.get("name") as string
-    const email = formData.get("email") as string
-    const description = formData.get("description") as string
-    const supabase = createClient()
-
-    const { error } = await supabase.from("tickets").insert({
-      name,
-      email,
-      description,
-    })
-
-    if (error) {
-      console.log("error", error)
-    }
-    console.log("success!")
-    redirect("/admin-panel")
-  }
-
   return (
     <div className="flex items-center justify-center h-screen">
       <BackButton />
@@ -45,34 +22,7 @@ export default function NewTicket() {
             </div>
 
             <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-              <form className="space-y-4">
-                <div>
-                  <label className="sr-only" htmlFor="name">
-                    Name
-                  </label>
-                  <input className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Name" type="text" name="name" id="name" required />
-                </div>
-                <div>
-                  <label className="sr-only" htmlFor="email">
-                    Email
-                  </label>
-                  <input className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Email address" type="email" name="email" id="email" required />
-                </div>
-
-                <div>
-                  <label className="sr-only" htmlFor="description">
-                    Description
-                  </label>
-
-                  <textarea className="w-full rounded-lg border-gray-200 p-3 text-sm" placeholder="Description" rows={8} name="description" id="description" required></textarea>
-                </div>
-
-                <div className="mt-4">
-                  <SubmitButton formAction={createTicket} className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto" pendingText="Submitting..">
-                    Submit
-                  </SubmitButton>
-                </div>
-              </form>
+              <Form />
             </div>
           </div>
         </div>

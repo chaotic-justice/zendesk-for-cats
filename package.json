@@ -3,19 +3,24 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "seeding": "ts-node supabase/seeding.ts"
   },
   "dependencies": {
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-react": "^2.2.1",
+    "@ngneat/falso": "^7.2.0",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "@tanstack/react-table": "^8.15.3",
     "autoprefixer": "10.4.17",
     "geist": "^1.2.1",
     "next": "latest",
     "postcss": "8.4.33",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-responsive": "^10.0.0",
     "react-toastify": "^10.0.5",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
@@ -24,6 +29,7 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
-    "encoding": "^0.1.13"
+    "encoding": "^0.1.13",
+    "ts-node": "^10.9.2"
   }
 }

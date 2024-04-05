@@ -1,6 +1,5 @@
-import PawButton from "@/components/PawButton"
+import PawButton from "@/components/buttons/PawButton"
 import Header from "@/components/Header"
-import AuthButton from "../components/AuthButton"
 import Link from "next/link"
 
 export default async function Index() {
@@ -9,7 +8,6 @@ export default async function Index() {
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           <PawButton />
-          <AuthButton />
         </div>
       </nav>
 
@@ -17,10 +15,10 @@ export default async function Index() {
         <Header />
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          <Link href="/new-ticket" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+          <Link href="/new-ticket" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover w-4/5 sm:w-auto">
             Submit a ticket
           </Link>
-          <Link href="/admin-panel" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
+          <Link href="/admin-table" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover w-4/5 sm:w-auto">
             Resolve tickets
           </Link>
         </main>
