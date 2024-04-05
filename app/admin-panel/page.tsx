@@ -1,6 +1,6 @@
 import BackButton from "@/components/BackButton"
 import { createClient } from "@/utils/supabase/server"
-import EditButton, { TicketStatus } from "./EditButton"
+import Link from "next/link"
 
 export default async function AdminPanel() {
   const supabase = createClient()
@@ -34,7 +34,9 @@ export default async function AdminPanel() {
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tic.description}</td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">{tic.status}</td>
                   <td className="whitespace-nowrap px-4 py-2">
-                    <EditButton ticketId={tic.id} status={tic.status as TicketStatus} />
+                    <Link href={`/admin-panel/${tic.id}`}>
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-700">Resolve</button>
+                    </Link>
                   </td>
                 </tr>
               )

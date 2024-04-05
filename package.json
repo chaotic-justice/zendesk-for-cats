@@ -10,6 +10,7 @@
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-react": "^2.2.1",
     "@ngneat/falso": "^7.2.0",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "10.4.17",
@@ -28,6 +29,5 @@
     "@types/react-dom": "18.2.18",
     "encoding": "^0.1.13",
     "ts-node": "^10.9.2"
-  },
-  "type": "module"
+  }
 }

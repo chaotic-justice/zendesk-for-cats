@@ -1,51 +1,65 @@
+"use client"
+
+import Modal from "@/components/Modal"
+import { resolveTicket } from "@/utils/actions"
 import { createClient } from "@/utils/supabase/client"
-import { TicketStatus } from "./EditButton"
-import { useRouter } from "next/navigation"
+import { notFound, useRouter } from "next/navigation"
+import React, { useRef } from "react"
 import { Bounce, toast } from "react-toastify"
 
-type Props = {
-  onClose: () => void
-  ticketId: number
-  status: TicketStatus
+interface Props {
+  params: {
+    id: string
+  }
 }
 
-const Popup = ({ onClose, ticketId, status }: Props) => {
+const Page = async ({ params }: Props) => {
   const router = useRouter()
+  const supabase = createClient()
+  const ref = useRef<HTMLFormElement>(null)
+  const { data: ticket, status } = await supabase.from("tickets").select().eq("id", params.id).single()
 
-  const resolveTicket = async (formData: FormData) => {
+  if (status === 404 || !ticket) {
+    notFound()
+  }
+
+  const submitHandler = async (formData: FormData) => {
     const newStatus = formData.get("statusOption") as string
     // no need to do anything w/ message on the backend
     // simplify log it via toastify alert
     const message = formData.get("message") as string
-    const supabase = createClient()
 
-    const { error } = await supabase.from("tickets").update({ status: newStatus }).eq("id", ticketId).select()
     // if newStatus is equal to old status, do nothing
-    if (status === newStatus) return onClose()
-    if (error) {
-      console.log("error", error)
+    if (ticket.status === newStatus) {
+      router.back()
+    }
+    const { pgError, pgStatus } = await resolveTicket({ ticketId: ticket.id, newStatus })
+    if (pgError) {
+      console.log("error", pgError)
       return
     }
 
-    const toastedMessage = `${newStatus === "resolved" ? "Resolved! " : ""} Consider rewarding your cat with a treat. ${message}`
-    toast.success(toastedMessage, {
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    })
-    router.refresh()
-    onClose()
+    const toastedMessage = `${newStatus === "resolved" ? "Resolved! " : "Updated!"} ${message}`
+    if (pgStatus === 201 || pgStatus === 200) {
+      toast.success(toastedMessage, {
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      })
+      router.back()
+      router.refresh()
+    }
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <Modal>
       <div className="rounded-lg bg-white p-8 shadow-2xl">
-        <form>
+        <form ref={ref}>
           <h2 className="text-lg font-bold">Are you sure you want to do that?</h2>
           <p className="mt-2 text-sm text-gray-500">Some cats are docile; some cats are more vocal.</p>
 
@@ -77,17 +91,24 @@ const Popup = ({ onClose, ticketId, status }: Props) => {
           </div>
 
           <div className="mt-4 flex gap-2">
-            <button type="submit" formAction={resolveTicket} className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600">
+            <button type="submit" formAction={submitHandler} className="rounded bg-green-50 px-4 py-2 text-sm font-medium text-green-600">
               Yes, I'm sure
             </button>
-            <button onClick={onClose} className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600">
+            <button
+              onClick={(e: React.MouseEvent<HTMLElement>): void => {
+                e.preventDefault()
+                ref.current?.reset()
+                router.back()
+              }}
+              className="rounded bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600"
+            >
               No, go back
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 
-export default Popup
+export default Page
