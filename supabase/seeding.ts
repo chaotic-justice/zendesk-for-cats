@@ -2,7 +2,8 @@ import { randBetweenDate, randCatchPhrase, randEmail, randFirstName, seed } from
 import fs from "fs"
 import { EOL } from "os"
 
-const filePath = "supabase/seed.sql"
+// const filePath = "supabase/seed.sql"
+const filePath = "supabase/migrations/20240405185437_seeding_1500_dummy_tickets.sql"
 seed("zealthy-constant-seed")
 
 interface Ticket {
@@ -15,7 +16,7 @@ interface Ticket {
 }
 
 const generateFakeTickets = () => {
-  const tickets: Array<Ticket> = new Array(500).fill(-1).map((_v) => {
+  const tickets: Array<Ticket> = new Array(1500).fill(-1).map((_v) => {
     const idx = Math.floor(Math.random() * 3)
     const randomStatus = ["new", "in progress", "resolved"][idx]
     const createdAt = randBetweenDate({ from: new Date("10/07/1998"), to: new Date() }).toISOString()
@@ -40,8 +41,6 @@ const main = () => {
   // build batch-insert statement from concatenated vals
   const batchInsertStatement: string = `INSERT INTO "public"."tickets" ("name", "email", "description", "status", "created_at", "updated_at") VALUES ${formattedTickets.join(",\n")};`
 
-  fs.appendFileSync(filePath, EOL, "utf8")
-  fs.appendFileSync(filePath, EOL, "utf8")
   fs.appendFileSync(filePath, "--\n-- Begin seeding...\n--\n", "utf8")
   fs.appendFileSync(filePath, batchInsertStatement, "utf8")
   fs.appendFileSync(filePath, EOL, "utf8")
