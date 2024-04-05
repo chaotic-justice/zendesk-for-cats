@@ -9,13 +9,13 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({ children }) => {
-  const router = useRouter()
+    const router = useRouter()
 
-  const handleOnOpenChange = (open: boolean) => {
-    if (!open) {
-      router.back()
+    const handleOnOpenChange = (open: boolean) => {
+      if (!open) {
+        router.back()
+      }
     }
-  }
 
   return (
     <Dialog.Root open onOpenChange={handleOnOpenChange}>
