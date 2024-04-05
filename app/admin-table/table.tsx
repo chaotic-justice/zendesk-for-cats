@@ -3,6 +3,7 @@
 import { type Database } from "@/utils/database.types"
 import { Column, ColumnDef, PaginationState, Table, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
 import Link from "next/link"
+import { useMediaQuery } from "react-responsive"
 
 import React from "react"
 
@@ -13,11 +14,16 @@ type Props = {
 }
 
 function TableComponent({ tickets }: Props) {
-  const columns = React.useMemo<ColumnDef<Ticket>[]>(
+  // const isDesktop = useMediaQuery({ minWidth: 992 })
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 })
+  const isMobile = useMediaQuery({ maxWidth: 767 })
+
+  const defaultColumns = React.useMemo<ColumnDef<Ticket>[]>(
     () => [
       {
         accessorKey: "id",
         header: () => "Ticket Id",
+        enableColumnFilter: false,
         footer: (props) => props.column.id,
       },
       {
@@ -25,17 +31,20 @@ function TableComponent({ tickets }: Props) {
         id: "name",
         cell: (info) => info.getValue(),
         header: () => <span>Name</span>,
+        enableColumnFilter: false,
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "email",
         header: () => <span>Email</span>,
+        enableColumnFilter: false,
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "description",
         header: () => <span>Description</span>,
         enableSorting: false,
+        enableColumnFilter: false,
         footer: (props) => props.column.id,
       },
       {
@@ -57,20 +66,30 @@ function TableComponent({ tickets }: Props) {
           })
           return formattedDatetime
         },
+        enableColumnFilter: false,
         header: "CreatedAt",
         footer: (props) => props.column.id,
       },
       {
         accessorKey: "id",
         header: () => undefined,
+        enableColumnFilter: false,
         enableSorting: false,
         footer: (props) => props.column.id,
       },
     ],
     []
   )
+  const mobileColumns = React.useMemo<ColumnDef<Ticket>[]>(() => {
+    const copied = defaultColumns.slice()
+    return [copied[0], copied[4], copied[6]]
+  }, [])
+  const tabletColumns = React.useMemo<ColumnDef<Ticket>[]>(() => {
+    const copied = defaultColumns.slice()
+    return [copied[0], copied[1], copied[4], copied[6]]
+  }, [])
 
-  return <MyTable data={tickets} columns={columns} />
+  return <MyTable data={tickets} columns={isMobile ? mobileColumns : isTablet ? tabletColumns : defaultColumns} />
 }
 
 function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>[] }) {
@@ -205,9 +224,10 @@ function Filter({ column, table, idx }: { column: Column<any, any>; table: Table
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
+  const truthy = column.getCanFilter()
 
-  // enable searching for ticket.id && ticket.status
-  return ![0, 4].includes(idx) ? <input type="text" className="w-36 border shadow rounded opacity-0" /> : <input type="text" value={(columnFilterValue ?? "") as string} onChange={(e) => column.setFilterValue(e.target.value)} placeholder={`Search...`} className="w-36 border shadow rounded" />
+  // enable searching for ticket.status only
+  return !truthy ? <input type="text" className="w-36 border shadow rounded opacity-0" /> : <input type="text" value={(columnFilterValue ?? "") as string} onChange={(e) => column.setFilterValue(e.target.value)} placeholder={`Search...`} className="w-36 border shadow rounded" />
 }
 
 export default TableComponent
