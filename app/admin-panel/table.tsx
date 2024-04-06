@@ -5,7 +5,8 @@ import { Column, ColumnDef, PaginationState, Table, flexRender, getCoreRowModel,
 import Link from "next/link"
 import { useMediaQuery } from "react-responsive"
 
-import React from "react"
+import { useEffect, useMemo, useState } from "react"
+import { fetchTickets } from "@/utils/actions"
 
 type Ticket = Database["public"]["Tables"]["tickets"]["Row"]
 
@@ -13,12 +14,21 @@ type Props = {
   tickets: Array<Ticket>
 }
 
-function TableComponent({ tickets }: Props) {
+function TableComponent() {
   // const isDesktop = useMediaQuery({ minWidth: 992 })
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 })
   const isMobile = useMediaQuery({ maxWidth: 767 })
+  const [data, setData] = useState<Array<Ticket>>(() => [])
 
-  const defaultColumns = React.useMemo<ColumnDef<Ticket>[]>(
+  useEffect(() => {
+    const fetchData = async () => {
+      const tickets = await fetchTickets()
+      setData(tickets)
+    }
+    fetchData()
+  }, [])
+
+  const defaultColumns = useMemo<ColumnDef<Ticket>[]>(
     () => [
       {
         accessorKey: "id",
@@ -79,20 +89,20 @@ function TableComponent({ tickets }: Props) {
     ],
     []
   )
-  const mobileColumns = React.useMemo<ColumnDef<Ticket>[]>(() => {
+  const mobileColumns = useMemo<ColumnDef<Ticket>[]>(() => {
     const copied = defaultColumns.slice()
     return [copied[0], copied[4], copied[6]]
   }, [])
-  const tabletColumns = React.useMemo<ColumnDef<Ticket>[]>(() => {
+  const tabletColumns = useMemo<ColumnDef<Ticket>[]>(() => {
     const copied = defaultColumns.slice()
     return [copied[0], copied[1], copied[4], copied[6]]
   }, [])
 
-  return <MyTable data={tickets} columns={isMobile ? mobileColumns : isTablet ? tabletColumns : defaultColumns} />
+  return <MyTable data={data} columns={isMobile ? mobileColumns : isTablet ? tabletColumns : defaultColumns} />
 }
 
 function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>[] }) {
-  const [pagination, setPagination] = React.useState<PaginationState>({
+  const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
@@ -114,15 +124,15 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
   })
 
   return (
-    <div className="p-2">
+    <div className="overflow-x-auto p-0 sm:p-2">
       <div className="h-2" />
-      <table>
+      <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, idx) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th key={header.id} colSpan={header.colSpan} className="whitespace-nowrap px-0 sm:px-4 py-2 font-medium text-gray-900">
                     <div
                       {...{
                         className: header.column.getCanSort() ? "cursor-pointer select-none" : "",
@@ -152,17 +162,17 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-200">
           {table.getRowModel().rows.map((row, i) => {
             return (
               <tr key={row.id + i}>
                 {row.getVisibleCells().map((cell, j) => {
                   return j < row.getVisibleCells().length - 1 ? (
-                    <td key={cell.id + j} style={{ textAlign: "center" }}>
+                    <td key={cell.id + j} className="whitespace-nowrap px-0 sm:px-4 py-2 text-gray-700 text-center">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ) : (
-                    <td key={cell.id + j} className="whitespace-nowrap px-4 py-2">
+                    <td key={cell.id + j} className="whitespace-nowrap px-0 sm:px-4 py-2">
                       <Link href={`/admin-table/${cell.getValue()}`}>
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-700">Resolve</button>
                       </Link>
@@ -174,8 +184,7 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-2 mt-5 sm:mt-16 text-xs sm:text-lg">
         <button className="border rounded p-1" onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()}>
           {"<<"}
         </button>
@@ -224,8 +233,6 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
 }
 
 function Filter({ column, table, idx }: { column: Column<any, any>; table: Table<any>; idx: number }) {
-  const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
-
   const columnFilterValue = column.getFilterValue()
 
   // enable searching for ticket.status only
