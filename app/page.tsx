@@ -18,7 +18,7 @@ export default async function Index() {
           <Link href="/new-ticket" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover w-4/5 sm:w-auto">
             Submit a ticket
           </Link>
-          <Link href="/admin-table" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover w-4/5 sm:w-auto">
+          <Link href="/admin-panel" className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover w-4/5 sm:w-auto">
             Resolve tickets
           </Link>
         </main>
