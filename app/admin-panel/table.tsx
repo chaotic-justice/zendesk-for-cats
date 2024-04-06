@@ -173,7 +173,7 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
                     </td>
                   ) : (
                     <td key={cell.id + j} className="whitespace-nowrap px-0 sm:px-4 py-2">
-                      <Link href={`/admin-table/${cell.getValue()}`}>
+                      <Link href={`/admin-panel/${cell.getValue()}`}>
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-700">Resolve</button>
                       </Link>
                     </td>
