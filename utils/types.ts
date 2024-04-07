@@ -12,4 +12,7 @@ export type NewTicketInputs = {
 export type ResolveTicketInputs = {
   ticketId: number
   newStatus: string
+  message?: string
 }
+
+export type Ticket = Database["public"]["Tables"]["tickets"]["Row"]

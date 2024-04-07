@@ -16,21 +16,9 @@ export const createTicket = async ({ name, email, description }: NewTicketInputs
   return { pgError, pgStatus }
 }
 
-export const resolveTicket = async ({ ticketId, newStatus }: ResolveTicketInputs) => {
+export const resolveTicket = async ({ ticketId, newStatus, message = "" }: ResolveTicketInputs) => {
   const supabase = createClient()
   const { error: pgError, status: pgStatus } = await supabase.from("tickets").update({ status: newStatus }).eq("id", ticketId).select()
   console.log("pgStatus from resolving..", pgStatus)
-  return { pgError, pgStatus }
-}
-
-export const fetchTickets = async () => {
-  noStore()
-  const supabase = createClient()
-  try {
-    const { data: tickets } = await supabase.from("tickets").select()
-    return tickets ?? []
-  } catch (err) {
-    console.error("Database Error:", err)
-    throw new Error("Failed to fetch a list of tickets.")
-  }
+  return { pgError, pgStatus, message }
 }
