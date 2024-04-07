@@ -12,12 +12,11 @@ export const metadata = {
   description: "The fastest way to resolve a dispute.",
 }
 
-export default function RootLayout({ children, modal }: { children: ReactNode; modal: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <Providers>{children}</Providers>
-        {modal}
         <ToastProvider />
       </body>
     </html>
