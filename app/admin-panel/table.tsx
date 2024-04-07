@@ -1,32 +1,21 @@
 "use client"
 
-import { type Database } from "@/utils/database.types"
 import { Column, ColumnDef, PaginationState, Table, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
-import Link from "next/link"
 import { useMediaQuery } from "react-responsive"
 
-import { useEffect, useMemo, useState } from "react"
-import { fetchTickets } from "@/utils/actions"
-
-type Ticket = Database["public"]["Tables"]["tickets"]["Row"]
-
-type Props = {
-  tickets: Array<Ticket>
-}
+import { DialogForm } from "@/components/DialogForm"
+import { fetchTickets } from "@/utils/queries"
+import { createClient } from "@/utils/supabase/client"
+import { Ticket } from "@/utils/types"
+import { useQuery } from "@supabase-cache-helpers/postgrest-react-query"
+import { useMemo, useState } from "react"
 
 function TableComponent() {
   // const isDesktop = useMediaQuery({ minWidth: 992 })
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 })
   const isMobile = useMediaQuery({ maxWidth: 767 })
-  const [data, setData] = useState<Array<Ticket>>(() => [])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const tickets = await fetchTickets()
-      setData(tickets)
-    }
-    fetchData()
-  }, [])
+  const supabase = createClient()
+  const { data: tickets } = useQuery(fetchTickets(supabase))
 
   const defaultColumns = useMemo<ColumnDef<Ticket>[]>(
     () => [
@@ -98,7 +87,7 @@ function TableComponent() {
     return [copied[0], copied[1], copied[4], copied[6]]
   }, [])
 
-  return <MyTable data={data} columns={isMobile ? mobileColumns : isTablet ? tabletColumns : defaultColumns} />
+  return <MyTable data={tickets ?? []} columns={isMobile ? mobileColumns : isTablet ? tabletColumns : defaultColumns} />
 }
 
 function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>[] }) {
@@ -173,9 +162,10 @@ function MyTable({ data, columns }: { data: Ticket[]; columns: ColumnDef<Ticket>
                     </td>
                   ) : (
                     <td key={cell.id + j} className="whitespace-nowrap px-0 sm:px-4 py-2">
-                      <Link href={`/admin-panel/${cell.getValue()}`}>
+                      {/* <Link href={`/admin-panel/${cell.getValue()}`}>
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-md transition-colors duration-300 ease-in-out hover:bg-blue-700">Resolve</button>
-                      </Link>
+                      </Link> */}
+                      <DialogForm ticketId={row.original.id} oldStatus={row.original.status} />
                     </td>
                   )
                 })}

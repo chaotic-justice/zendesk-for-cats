@@ -2,6 +2,7 @@ import ToastProvider from "@/components/ToastProvider"
 import { GeistSans } from "geist/font/sans"
 import "./globals.css"
 import React, { type ReactNode } from "react"
+import { Providers } from "./providers"
 
 const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
 
@@ -15,7 +16,7 @@ export default function RootLayout({ children, modal }: { children: ReactNode; m
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-        <main className="min-h-screen flex flex-col items-center">{children}</main>
+        <Providers>{children}</Providers>
         {modal}
         <ToastProvider />
       </body>

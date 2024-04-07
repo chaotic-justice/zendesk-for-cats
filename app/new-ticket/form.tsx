@@ -3,8 +3,15 @@
 import { SubmitButton } from "@/components/buttons/SubmitButton"
 import { createTicket } from "@/utils/actions"
 import { Bounce, toast } from "react-toastify"
+import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query"
+import { QueryClient } from "@tanstack/react-query"
+import { createClient } from "@/utils/supabase/client"
+import { fetchTickets } from "../../utils/queries"
 
 const Form = () => {
+  const queryClient = new QueryClient()
+  const supabase = createClient()
+
   const submitHandler = async (formData: FormData) => {
     const name = formData.get("name") as string
     const email = formData.get("email") as string
@@ -24,6 +31,7 @@ const Form = () => {
           transition: Bounce,
         })
       }
+      await prefetchQuery(queryClient, fetchTickets(supabase))
     } else {
       toast.error(`Unknown pgError:, ${pgError!.message}`, {
         position: "top-right",
