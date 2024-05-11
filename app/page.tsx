@@ -1,3 +1,4 @@
+import AuthButton from "@/components/buttons/AuthButton"
 import PawButton from "@/components/buttons/PawButton"
 import Header from "@/components/Header"
 import Link from "next/link"
@@ -8,6 +9,7 @@ export default async function Index() {
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
         <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
           <PawButton />
+          <AuthButton />
         </div>
       </nav>
 
